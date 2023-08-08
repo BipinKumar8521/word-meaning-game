@@ -65,9 +65,6 @@ function App() {
   });
 
   useEffect(() => {
-    // alert("Welcome to the game");
-    // setPlayer1(prompt("Enter Player 1 Name", "Player 1"));
-    // setPlayer2(prompt("Enter Player 2 Name", "Player 2"));
     if (currentplayer === player1) {
       setPlayer1Meaning("A");
     } else {
