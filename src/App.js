@@ -20,49 +20,48 @@ function App() {
     }
   };
 
+  const updateTimer = () => {
+    setTotalTime((totaltime) => totaltime - 1);
+    setTimeout(updateTimer, 1000);
+  };
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (totaltime === 0) {
-        if (player1score > player2score) {
-          alert(`${player1} won the game`);
-        } else if (player2score > player1score) {
-          alert(`${player2} won the game`);
-        } else {
-          alert("Game Draw");
-        }
-        setPlayer1Score(0);
-        setPlayer2Score(0);
-        setPlayer1Meaning("A");
-        setPlayer2Meaning("");
-        setWords([]);
-        setPlayer1Time(30);
-        setPlayer2Time(30);
-        setTotalTime(600);
-        setCurrentPlayer(player1);
-        return;
-      }
-      setTotalTime(totaltime - 1);
-      if (currentplayer === player1) {
-        setPlayer1Time(player1time - 1);
-        if (player1time === 0) {
-          setPlayer1Time(30);
-          setCurrentPlayer(player2);
-          setPlayer1Meaning("");
-          setPlayer2Meaning(player1meaning.charAt(0).toUpperCase());
-        }
+    if (totaltime === 0) {
+      if (player1score > player2score) {
+        alert(`${player1} won the game`);
+      } else if (player2score > player1score) {
+        alert(`${player2} won the game`);
       } else {
-        setPlayer2Time(player2time - 1);
-        if (player2time === 0) {
-          setPlayer2Time(30);
-          setCurrentPlayer(player1);
-          setPlayer2Meaning("");
-          setPlayer1Meaning(player2meaning.charAt(0).toUpperCase());
-        }
+        alert("Game Draw");
       }
-    }, 1000);
-
-    return () => clearInterval(interval);
-  });
+      setPlayer1Score(0);
+      setPlayer2Score(0);
+      setPlayer1Meaning("A");
+      setPlayer2Meaning("");
+      setWords([]);
+      setPlayer1Time(30);
+      setPlayer2Time(30);
+      setTotalTime(600);
+      setCurrentPlayer(player1);
+      return;
+    }
+    if (currentplayer === player1) {
+      setPlayer1Time((player1time) => player1time - 1);
+      if (player1time === 0) {
+        setPlayer1Time(30);
+        setCurrentPlayer(player2);
+        setPlayer1Meaning("");
+        setPlayer2Meaning(player1meaning.charAt(0).toUpperCase());
+      }
+    } else {
+      setPlayer2Time((player2time) => player2time - 1);
+      if (player2time === 0) {
+        setPlayer2Time(30);
+        setCurrentPlayer(player1);
+        setPlayer2Meaning("");
+        setPlayer1Meaning(player2meaning.charAt(0).toUpperCase());
+      }
+    }
+  }, [totaltime]);
 
   useEffect(() => {
     if (currentplayer === player1) {
@@ -72,6 +71,13 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    const timerId = setTimeout(updateTimer, 1000); // Start the timer
+
+    return () => {
+      clearTimeout(timerId); // Clear the timer when the component unmounts
+    };
+  }, []);
   const handlePlayerInput = (e) => {
     if (e.target.value === "") {
       return;
